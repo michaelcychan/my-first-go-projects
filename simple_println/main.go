@@ -21,4 +21,6 @@ func main() {
 	fmt.Println("   `::::::::::::::::`")
 	fmt.Println("    .::::::::::::::.")
 	fmt.Println("      oO:::::::Oo")
+	fmt.Print("This is Print")
+	fmt.Print("This is second line of Print, they stay at same line")
 }
