@@ -55,3 +55,30 @@ func Test9(t *testing.T) {
 		t.Errorf("got %q, but want %q", got, want)
 	}
 }
+
+func Test10(t *testing.T) {
+	got := tddFizzBuzz(10)
+	want := "Buzz"
+
+	if got != want {
+		t.Errorf("got %q, but want %q", got, want)
+	}
+}
+
+func Test13(t *testing.T) {
+	got := tddFizzBuzz(13)
+	want := "13"
+
+	if got != want {
+		t.Errorf("got %q, but want %q", got, want)
+	}
+}
+
+func Test15(t *testing.T) {
+	got := tddFizzBuzz(15)
+	want := "FizzBuzz"
+
+	if got != want {
+		t.Errorf("got %q, but want %q", got, want)
+	}
+}
