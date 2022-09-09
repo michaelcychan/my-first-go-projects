@@ -38,7 +38,7 @@ func Test5(t *testing.T) {
 	}
 }
 
-func Test5(t *testing.T) {
+func Test6(t *testing.T) {
 	got := tddFizzBuzz(6)
 	want := "Fizz"
 
