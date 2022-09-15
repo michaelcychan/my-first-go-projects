@@ -28,3 +28,21 @@ func Test3(t *testing.T) {
 		t.Errorf("got %v (type: %T), but want %d (type: %T)", got, got, want, want)
 	}
 }
+
+func Test_negative1(t *testing.T) {
+	got := stringToNum("-1")
+	want := -1
+
+	if got != want {
+		t.Errorf("got %v (type: %T), but want %d (type: %T)", got, got, want, want)
+	}
+}
+
+func Test_notString(t *testing.T) {
+	got := stringToNum("abc")
+	want := 2
+
+	if got != want {
+		t.Errorf("got %v (type: %T), but want %d (type: %T)", got, got, want, want)
+	}
+}
