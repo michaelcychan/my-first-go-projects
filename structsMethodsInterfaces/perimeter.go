@@ -23,6 +23,10 @@ func (c Circle) Area() float64 {
 	return math.Pi * c.Radius * c.Radius
 }
 
-func Perimeter(rectangle Rectangle) float64 {
+func (rectangle Rectangle) Perimeter() float64 {
 	return (rectangle.Height + rectangle.Width) * 2
+}
+
+func (c Circle) Perimeter() float64 {
+	return (c.Radius * 2 * math.Pi)
 }
