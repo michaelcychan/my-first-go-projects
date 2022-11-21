@@ -1,6 +1,16 @@
 package calculator
 
-import "testing"
+import (
+	"fmt"
+	"reflect"
+	"testing"
+)
+
+func ExampleSum() {
+	actual := Sum([]int{1, 2, 3})
+	fmt.Println(actual)
+	// Output: 6
+}
 
 func TestSum(t *testing.T) {
 
@@ -10,6 +20,20 @@ func TestSum(t *testing.T) {
 		expected := 21
 
 		assertMessage(t, got, expected, numbers)
+	})
+}
+
+func TestSumAll(t *testing.T) {
+	t.Run("takes a number of slice and return a slice of sum of each slice", func(t *testing.T) {
+		slice1 := []int{1, 2}
+		slice2 := []int{0, 9}
+		got := SumAll(slice1, slice2)
+		expected := []int{3, 9}
+
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("got %v, but expected %v", got, expected)
+		}
+
 	})
 }
 
