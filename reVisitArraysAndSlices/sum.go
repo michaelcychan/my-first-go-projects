@@ -9,10 +9,22 @@ func Sum(numbers []int) int {
 }
 
 func SumAll(slices ...[]int) []int {
-	numberOfSlices := len(slices)             // get the number of slices in the spread variables
-	outputSums := make([]int, numberOfSlices) // create a slice with []int, and number of which
-	for index, numbers := range slices {
-		outputSums[index] = Sum(numbers)
+	var outputSums []int
+	for _, numbers := range slices {
+		outputSums = append(outputSums, Sum(numbers))
+	}
+	return outputSums
+}
+
+func SumAllTails(slices ...[]int) []int {
+	var outputSums []int
+	for _, numbers := range slices {
+		if len(numbers) == 0 {
+			outputSums = append(outputSums, 0)
+		} else {
+			tail := numbers[1:]
+			outputSums = append(outputSums, Sum(tail))
+		}
 	}
 	return outputSums
 }
