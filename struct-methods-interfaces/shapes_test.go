@@ -49,18 +49,23 @@ func TestArea(t *testing.T) {
 
 	t.Run("tests different types with same interface using struct slice", func(t *testing.T) {
 		areaTests := []struct {
+			name     string
 			shape    Shape
 			expected float64
 		}{
-			{Rectangle{12.0, 6.0}, 72.0},
-			{Circle{5.0}, 78.53981633974483},
+			{name: "Rectangle", shape: Rectangle{12.0, 6.0}, expected: 72.0},
+			{name: "Circle", shape: Circle{5.0}, expected: 78.53981633974483},
+			//{name: "Triangle", shape: Triangle{6.0, 3.0}, expected: 9.0},
+			{name: "Triangle-fail", shape: Triangle{6.0, 2.0}, expected: 9.0}, // this will cause failure, uncomment to see the error message
 		}
 
 		for _, testCase := range areaTests {
-			got := testCase.shape.Area()
-			if got != testCase.expected {
-				t.Errorf("got %g, but expected %g", got, testCase.expected)
-			}
+			t.Run(testCase.name, func(t *testing.T) {
+				got := testCase.shape.Area()
+				if got != testCase.expected {
+					t.Errorf("%#v got %g, but expected %g", testCase.name, got, testCase.expected)
+				}
+			})
 		}
 	})
 }
