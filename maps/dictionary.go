@@ -1,13 +1,15 @@
 package main
 
-import (
-	"errors"
+const (
+	ErrNotFound   = DictionaryErr("no result from your keyword")
+	ErrWordExists = DictionaryErr("key already existed, cannot add word")
 )
 
-var (
-	ErrNotFound   = errors.New("no result from your keyword")
-	ErrWordExists = errors.New("key already existed, cannot add word")
-)
+type DictionaryErr string
+
+func (err DictionaryErr) Error() string {
+	return string(err)
+}
 
 type Dictionary map[string]string
 
