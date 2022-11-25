@@ -50,6 +50,41 @@ func TestAdd(t *testing.T) {
 	})
 }
 
+func TestUpdate(t *testing.T) {
+	t.Run("updates an existing key", func(t *testing.T) {
+		word := "test"
+		definition := "this is the definition"
+		dict := Dictionary{word: definition}
+
+		newDefinition := "this is a new definition"
+
+		dict.Update(word, newDefinition)
+		actual, err := dict.Search(word)
+		assertNoError(t, err)
+		assertStrings(t, actual, newDefinition)
+	})
+	t.Run("throws error when update an non-exisiting word", func(t *testing.T) {
+		word := "word"
+		definition := "definition"
+		dict := Dictionary{}
+
+		err := dict.Update(word, definition)
+		assertErrors(t, err, errWordNotExists)
+	})
+}
+
+func TestDelete(t *testing.T) {
+	word := "word"
+	definition := "definition"
+	dict := Dictionary{word: definition}
+	dict.Delete(word)
+
+	_, err := dict.Search(word)
+	if err != ErrNotFound {
+		t.Errorf("expected %q to be deleted, but it remained", word)
+	}
+}
+
 func assertStrings(t testing.TB, actual, expected string) {
 	t.Helper()
 	if actual != expected {
