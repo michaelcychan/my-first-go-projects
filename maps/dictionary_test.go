@@ -13,20 +13,41 @@ func TestSearch(t *testing.T) {
 	})
 	t.Run("returns a message for a unknown key", func(t *testing.T) {
 		_, err := dictionary.Search("unknown")
-		expected := "no result from your keyword"
+		expected := ErrNotFound
 
 		if err == nil {
 			t.Fatal("Expected an error, but did not receive one")
 		}
 
-		assertStrings(t, err.Error(), expected)
+		assertErrors(t, err, expected)
 	})
+}
 
+func TestAdd(t *testing.T) {
+	t.Run("able to add a new key-value pair", func(t *testing.T) {
+		dict := Dictionary{}
+		dict.Add("anotherKey", "New value")
+
+		expected := "New value"
+		actual, err := dict.Search("anotherKey")
+
+		if err != nil {
+			t.Fatal("Expected no error, but got one")
+		}
+		assertStrings(t, actual, expected)
+	})
 }
 
 func assertStrings(t testing.TB, actual, expected string) {
 	t.Helper()
 	if actual != expected {
 		t.Errorf("Expected %s, but got %s. Given %s", expected, actual, "test")
+	}
+}
+
+func assertErrors(t testing.TB, actualError, expectedError error) {
+	t.Helper()
+	if actualError != expectedError {
+		t.Errorf("expected error: %q, but got error: %q", expectedError, actualError)
 	}
 }
