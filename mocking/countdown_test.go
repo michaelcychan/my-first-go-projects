@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"reflect"
 	"testing"
+	"time"
 )
 
 // it will record how many times the SpySleeper is called in the test
@@ -71,4 +72,23 @@ GO!`
 		}
 	})
 
+}
+
+type SpyTime struct {
+	durationSlept time.Duration
+}
+
+func (s *SpyTime) Sleep(duration time.Duration) {
+	s.durationSlept = duration
+}
+
+func TestConfigurationSleeper(t *testing.T) {
+	sleepTime := 5 * time.Second
+	spyTime := &SpyTime{}
+	sleeper := ConfigurableSleeper{sleepTime, spyTime.Sleep}
+	sleeper.Sleep()
+
+	if spyTime.durationSlept != sleepTime {
+		t.Errorf("expected to have slept for %v, but actually slept for %v", sleepTime, spyTime.durationSlept)
+	}
 }
