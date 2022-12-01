@@ -28,6 +28,19 @@ func Countdown(out io.Writer, sleeper Sleeper) {
 	fmt.Fprint(out, startDeclaration)
 }
 
+// this is a wrong implementation because of wrong sequence
+// func Countdown(out io.Writer, sleeper Sleeper) {
+// 	for i := countDownCounter; i > 0; i-- {
+// 		fmt.Fprintln(out, i)
+// 	}
+
+// 	for i := countDownCounter; i > 0; i-- {
+// 		sleeper.Sleep()
+// 	}
+
+// 	fmt.Fprint(out, startDeclaration)
+// }
+
 func main() {
 	sleeper := &DefaultSleeper{}
 	Countdown(os.Stdout, sleeper)
