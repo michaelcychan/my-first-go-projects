@@ -17,14 +17,21 @@ func Racer(urlA, urlB string) (urlWinner string) {
 	}
 }
 
+var timeOutTenSecond = 10 * time.Second
+
 func RacerCh(urlA, urlB string) (urlWinner string, err error) {
+	// refactor the timeout configurable out
+	return RacerConfigurable(urlA, urlB, timeOutTenSecond)
+}
+
+func RacerConfigurable(urlA, urlB string, timeout time.Duration) (urlWinner string, err error) {
 	select {
 	// the fastest received by the channel wins
 	case <-pingUrl(urlA):
 		return urlA, nil
 	case <-pingUrl(urlB):
 		return urlB, nil
-	case <-time.After(10 * time.Second):
+	case <-time.After(timeout):
 		return "", fmt.Errorf("timed out waiting for %s and %s", urlA, urlB)
 	}
 }

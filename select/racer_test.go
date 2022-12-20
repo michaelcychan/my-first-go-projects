@@ -28,7 +28,7 @@ func TestRacer(t *testing.T) {
 }
 
 func TestRacerCh(t *testing.T) {
-	t.Run("basic test using select", func(t *testing.T) {
+	t.Run("basic test using select, returns the url of the faster server", func(t *testing.T) {
 		slowServer := makeDelayServer(20 * time.Millisecond)
 		fastServer := makeDelayServer(0 * time.Millisecond)
 
@@ -41,20 +41,22 @@ func TestRacerCh(t *testing.T) {
 		fasterURL := fastServer.URL
 
 		expected := fasterURL
-		actual, _ := RacerCh(slowerURL, fasterURL)
+		actual, err := RacerCh(slowerURL, fasterURL)
+
+		if err != nil {
+			t.Fatalf("Did not expect an error, but got one: %v", err)
+		}
 
 		if expected != actual {
 			t.Errorf("Expected %q, but got %q", expected, actual)
 		}
 	})
-	t.Run("returns an error if a server does not respond within 10 sec", func(t *testing.T) {
-		serverA := makeDelayServer(11 * time.Second)
-		serverB := makeDelayServer(13 * time.Second)
+	t.Run("returns an error if a server does not respond within a specific timeout duration", func(t *testing.T) {
+		serverA := makeDelayServer(1 * time.Second)
 
 		defer serverA.Close()
-		defer serverB.Close()
 
-		_, err := RacerCh(serverA.URL, serverB.URL)
+		_, err := RacerConfigurable(serverA.URL, serverA.URL, 50*time.Millisecond)
 
 		if err == nil {
 			t.Errorf("expected an error, but got none")
