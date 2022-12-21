@@ -26,6 +26,13 @@ func TestWalk(t *testing.T) {
 			}{"Chris"},
 			[]string{"Chris"},
 		},
+		{
+			"struct with one string field (intentionally wrong)",
+			struct {
+				Name string
+			}{"Wrong Input"},
+			[]string{"Output"},
+		},
 	}
 
 	for _, test := range cases {
