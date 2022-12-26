@@ -26,12 +26,28 @@ func TestWalk(t *testing.T) {
 			}{"Chris"},
 			[]string{"Chris"},
 		},
+		// {
+		// 	"struct with one string field (intentionally wrong)",
+		// 	struct {
+		// 		Name string
+		// 	}{"Wrong Input"}, // actually used as parameter in the spy function
+		// 	[]string{"Output"}, // expected value used in spy function
+		// },
 		{
-			"struct with one string field (intentionally wrong)",
+			"struct with two string fields",
 			struct {
 				Name string
-			}{"Wrong Input"},
-			[]string{"Output"},
+				City string
+			}{"Chris", "London"},
+			[]string{"Chris", "London"},
+		},
+		{
+			"struct with non-string field",
+			struct {
+				Name string
+				Age  int
+			}{"Chris", 33},
+			[]string{"Chris"},
 		},
 	}
 
