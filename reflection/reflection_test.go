@@ -98,6 +98,25 @@ func TestWalk(t *testing.T) {
 				{40, "Hong Kong"},
 			},
 			[]string{"London", "Hong Kong"},
+		}, {
+			"handling array",
+			[3]Profile{
+				{33, "London"},
+				{40, "Hong Kong"},
+				{48, "Tokyo"},
+			},
+			[]string{"London", "Hong Kong", "Tokyo"},
+			// }, {
+			//
+			// this way of testing map might fail because of sequence
+			// so testing map is done outside this struct test
+			//
+			// 	"handling maps",
+			// 	map[string]string{
+			// 		"City":      "Hong Kong",
+			// 		"Continent": "Asia",
+			// 	},
+			// 	[]string{"Hong Kong", "Asia"},
 		},
 	}
 
@@ -115,5 +134,35 @@ func TestWalk(t *testing.T) {
 			}
 
 		})
+
+	}
+	t.Run("testing with map", func(t *testing.T) {
+		var got []string
+		inputMap := map[string]string{
+			"City":      "Hong Kong",
+			"Continent": "Asia",
+		}
+		walk(inputMap, func(input string) {
+			got = append(got, input)
+		})
+
+		assertContains(t, got, "Hong Kong")
+		assertContains(t, got, "Asia")
+
+	})
+}
+
+func assertContains(t testing.TB, haystack []string, needle string) {
+	t.Helper()
+	contains := false
+
+	for _, v := range haystack {
+		if v == needle {
+			contains = true
+		}
+	}
+
+	if !contains {
+		t.Errorf("expected %+v to contain %s, but does not", haystack, needle)
 	}
 }

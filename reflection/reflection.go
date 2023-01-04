@@ -1,6 +1,8 @@
 package reflection
 
-import "reflect"
+import (
+	"reflect"
+)
 
 func getValue(x interface{}) reflect.Value {
 	val := reflect.ValueOf(x)
@@ -55,9 +57,19 @@ func walk(x interface{}, fn func(input string)) {
 
 	// Slice does not take .NumField() or .Field(), so we need another case
 	// because val is a reflect object, we need to use .Len() and .Index(i)
-	case reflect.Slice:
+	case reflect.Slice, reflect.Array:
 		numOfField = val.Len()
 		getField = val.Index
+	case reflect.Map:
+
+		// the following code will print keys rather than values
+		// for _, key := range val.MapKeys() {
+		// 	fn(key.String())
+		// }
+
+		for _, key := range val.MapKeys() {
+			walk(val.MapIndex(key).Interface(), fn)
+		}
 	}
 
 	// this is outside switch
@@ -66,8 +78,7 @@ func walk(x interface{}, fn func(input string)) {
 	// and they their respective .Field() and .Index() is copied to getField
 
 	for i := 0; i < numOfField; i++ {
-		field := getField(i)
-		walk(field.Interface(), fn)
+		walk(getField(i).Interface(), fn)
 	}
 
 }
