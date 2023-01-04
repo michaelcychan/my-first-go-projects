@@ -2,31 +2,43 @@ package reflection
 
 import "reflect"
 
-func walk(x interface{}, fn func(input string)) {
+func getValue(x interface{}) reflect.Value {
 	val := reflect.ValueOf(x)
 
-	// handling x as a pointer
+	// handling x if it is a pointer
+	// .Elem() can get the value of which the pointer points to
 	if val.Kind() == reflect.Ptr {
 		val = val.Elem()
 	}
+	return val
+}
 
-	for i := 0; i < val.NumField(); i++ {
-		field := val.Field(i)
+func walk(x interface{}, fn func(input string)) {
+	val := getValue(x)
 
-		switch field.Kind() {
-		case reflect.String:
-			fn(field.String())
-		case reflect.Struct:
+	switch val.Kind() {
+
+	// if x is already string, just run the function
+	case reflect.String:
+		fn(val.String())
+
+	// .NumField() and .Field() will cause panic if not used on struct
+	// that is why in our test case, the simplest example is still a struct
+	case reflect.Struct:
+		for i := 0; i < val.NumField(); i++ {
+			field := val.Field(i)
 			walk(field.Interface(), fn)
 		}
 
-		// old if clauses replaced by switch cases
-		// if field.Kind() == reflect.String {
-		// 	fn(field.String())
-		// }
-		// if field.Kind() == reflect.Struct {
-		// 	walk(field.Interface(), fn)
-		// }
+	// Slice does not take .NumField() or .Field(), so we need another case
+	// because val is a reflect object, we need to use .Len() and .Index(i)
+	case reflect.Slice:
+		for i := 0; i < val.Len(); i++ {
+			field := val.Index(i)
+			walk(field.Interface(), fn)
+		}
+		return
+
 	}
 
 }
