@@ -57,7 +57,25 @@ func TestWalk(t *testing.T) {
 				Age  int
 			}{"Chris", 33},
 			[]string{"Chris"},
-		}, {
+		},
+		// {
+		// 	"old nested fields without pre-defined type",
+		// 	struct {
+		// 		Name string
+		// 		Profile struct {
+		// 			Age int
+		// 			City string
+		// 		}
+		// 	}{
+		// 		"Chris",
+		// 		struct{
+		// 			Age int
+		// 			City string
+		// 		}{33, "London"},
+		// 	},
+		// 	[]string{"Chirs", "London"},
+		// },
+		{
 			"struct with nested fields",
 			Person{
 				"Chris",
@@ -70,6 +88,8 @@ func TestWalk(t *testing.T) {
 	for _, test := range cases {
 		t.Run(test.Name, func(t *testing.T) {
 			var got []string
+
+			// func(input string) {...} is an anonymous function put into walk func as an argument
 			walk(test.Input, func(input string) {
 				got = append(got, input)
 			})
