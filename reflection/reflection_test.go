@@ -168,6 +168,22 @@ func TestWalk(t *testing.T) {
 		assertContains(t, got, "Hong Kong")
 		assertContains(t, got, "London")
 	})
+	t.Run("testing with func", func(t *testing.T) {
+		// a mock function returns two Profile
+		testFunction := func() (Profile, Profile) {
+			return Profile{33, "Tokyo"}, Profile{35, "Osaka"}
+		}
+		var got []string
+		expected := []string{"Tokyo", "Osaka"}
+
+		walk(testFunction, func(input string) {
+			got = append(got, input)
+		})
+
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("expected %v, but got %v", expected, got)
+		}
+	})
 }
 
 func assertContains(t testing.TB, haystack []string, needle string) {

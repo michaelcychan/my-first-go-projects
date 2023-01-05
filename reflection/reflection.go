@@ -40,7 +40,7 @@ func walk(x interface{}, fn func(input string)) {
 			walkValue(val.Field(i))
 		}
 
-	// Slice does not take .NumField() or .Field(), so we need another case
+	// Slice does not take .NumField() or .Field(),
 	// because val is a reflect object, we need to use .Len() and .Index(i)
 	case reflect.Slice, reflect.Array:
 		for i := 0; i < val.Len(); i++ {
@@ -70,8 +70,18 @@ func walk(x interface{}, fn func(input string)) {
 		}
 
 	case reflect.Chan:
+		// https://go.dev/ref/spec#Receive_operator
+		// second return value (ok) is a bool
+		// The value of ok is true if the value received was delivered by a successful send operation to the channel,
+		// or false if it is a zero value generated because the channel is closed and empty.
 		for v, ok := val.Recv(); ok; v, ok = val.Recv() {
 			walkValue(v)
+		}
+	case reflect.Func:
+		// cannot directly call function, but using .Call()
+		valReturn := val.Call(nil)
+		for _, res := range valReturn {
+			walkValue(res)
 		}
 
 	}
