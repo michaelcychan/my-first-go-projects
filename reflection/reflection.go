@@ -61,7 +61,6 @@ func walk(x interface{}, fn func(input string)) {
 	// 	numOfField = val.Len()
 	// 	getField = val.Index
 	case reflect.Map:
-
 		// the following code will print keys rather than values
 		// for _, key := range val.MapKeys() {
 		// 	fn(key.String())
@@ -69,6 +68,12 @@ func walk(x interface{}, fn func(input string)) {
 		for _, key := range val.MapKeys() {
 			walkValue(val.MapIndex(key))
 		}
+
+	case reflect.Chan:
+		for v, ok := val.Recv(); ok; v, ok = val.Recv() {
+			walkValue(v)
+		}
+
 	}
 
 	// this is outside switch

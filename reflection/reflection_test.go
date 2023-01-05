@@ -150,6 +150,24 @@ func TestWalk(t *testing.T) {
 		assertContains(t, got, "Asia")
 
 	})
+	t.Run("testing with channel", func(t *testing.T) {
+		testChannel := make(chan Profile)
+
+		go func() {
+			testChannel <- Profile{30, "London"}
+			testChannel <- Profile{35, "Hong Kong"}
+			close(testChannel)
+		}()
+
+		var got []string
+
+		walk(testChannel, func(input string) {
+			got = append(got, input)
+		})
+
+		assertContains(t, got, "Hong Kong")
+		assertContains(t, got, "London")
+	})
 }
 
 func assertContains(t testing.TB, haystack []string, needle string) {
