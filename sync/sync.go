@@ -3,6 +3,8 @@ package sync
 import "sync"
 
 type Counter struct {
+	// use sync.Mutex for managing state
+	// use channels when passing ownership of data
 	mu    sync.Mutex
 	value int
 }
