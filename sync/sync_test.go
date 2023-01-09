@@ -12,7 +12,7 @@ func TestCounter(t *testing.T) {
 		counter.Inc()
 		counter.Inc()
 
-		assertCounterValue(t, 3, counter.Value())
+		assertCounterValue(t, 3, counter)
 	})
 	t.Run("runs safely concurrently", func(t *testing.T) {
 		expectedCounter := 2000
@@ -33,12 +33,12 @@ func TestCounter(t *testing.T) {
 		// .Wait() makes sure the goroutines are finished before moving on
 		wg.Wait()
 
-		assertCounterValue(t, expectedCounter, counter.Value())
+		assertCounterValue(t, expectedCounter, counter)
 	})
 }
 
-func assertCounterValue(t testing.TB, expected, got int) {
-	if expected != got {
-		t.Errorf("expected %d, but got %d", expected, got)
+func assertCounterValue(t testing.TB, expected int, counter Counter) {
+	if expected != counter.Value() {
+		t.Errorf("expected %d, but got %d", expected, counter.Value())
 	}
 }
